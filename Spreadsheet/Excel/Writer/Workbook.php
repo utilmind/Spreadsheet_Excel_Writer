@@ -33,22 +33,22 @@
 */
 
 if (!class_exists('Spreadsheet_Excel_Writer_BIFFwriter')) {
-    require_once 'Spreadsheet/Excel/Writer/Format.php';
-    require_once 'Spreadsheet/Excel/Writer/BIFFwriter.php';
-    require_once 'Spreadsheet/Excel/Writer/Worksheet.php';
-    require_once 'Spreadsheet/Excel/Writer/Parser.php';
+    require_once __DIR__.'/Format.php';
+    require_once __DIR__.'/BIFFwriter.php';
+    require_once __DIR__.'/Worksheet.php';
+    require_once __DIR__.'/Parser.php';
 }
 
 if (!class_exists('OLE')) {
-    require_once 'OLE.php';
+    require_once dirname(__DIR__).'/OLE.php';
 }
 
 if (!class_exists('OLE_PPS_Root')) {
-    require_once 'OLE/PPS/Root.php';
+    require_once dirname(__DIR__).'/OLE/PPS/Root.php';
 }
 
 if (!class_exists('OLE_PPS_File')) {
-    require_once 'OLE/PPS/File.php';
+    require_once dirname(__DIR__).'/OLE/PPS/File.php';
 }
 
 /**
@@ -326,6 +326,7 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
     */
     public function addWorksheet($name = '')
     {
+
         $index     = count($this->_worksheets);
         $sheetname = $this->_sheetname;
 
@@ -339,6 +340,13 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
             if (strlen($name) > 31) {
                 return $this->raiseError("Sheetname $name must be <= 31 chars");
             }
+
+            // AK: respect current multibyte encoding + convert it to Windows-1251
+            if (($this->_BIFF_version < 0x0600) && ($charset = mb_internal_encoding()) && ($charset != 'Windows-1251')) {
+
+              $name = iconv($charset, 'Windows-1251', $name);
+            }
+
         } else {
             if(function_exists('iconv')) {
                 $name = iconv('UTF-8','UTF-16LE',$name);
