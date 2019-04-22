@@ -1562,9 +1562,15 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     */
     public function writeString($row, $col, $str, $format = null)
     {
+
         if ($this->_BIFF_version == 0x0600) {
             return $this->writeStringBIFF8($row, $col, $str, $format);
+        }else {
+           // AK: respect input encoding + convert it to Windows-1251
+           if (($this->_BIFF_version < 0x0600) && $this->_input_encoding)
+             $str=iconv($this->_input_encoding, 'Windows-1251', $str);
         }
+
         $strlen    = strlen($str);
         $record    = 0x0204;                   // Record identifier
         $length    = 0x0008 + $strlen;         // Bytes to follow
