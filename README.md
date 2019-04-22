@@ -1,3 +1,7 @@
+AK 23.04.2019: This is a quickfix to generate Excel spreadsheets with respect to the current multibyte encoding of PHP. Let's write Unicode, but convert it into Windows-1251 on the fly.
+
+<hr />
+
 [![Build Status](https://travis-ci.org/pear/Spreadsheet_Excel_Writer.svg?branch=master)](https://travis-ci.org/pear/Spreadsheet_Excel_Writer)
 [![Latest Stable Version](https://poser.pugx.org/pear/spreadsheet_excel_writer/v/stable)](https://packagist.org/packages/pear/spreadsheet_excel_writer)
 
